@@ -101,7 +101,6 @@ Summary:    Documentation for QtLocation
 %package -n qt5-plugin-geoservices-here
 Summary:    Qt Geoservices plugin using HERE location services
 Requires:   qt5-qtlocation = %{version}-%{release}
-Obsoletes:  qt5-qtlocation-plugin-geoservices-nokia
 Provides:   qt5-qtlocation-plugin-geoservices-here
 
 %description -n qt5-plugin-geoservices-here
