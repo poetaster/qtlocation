@@ -215,10 +215,6 @@ cp doc/qtpositioning.qch %{buildroot}/%{_docdir}/qtpositioning/
 %defattr(-,root,root,-)
 %{_docdir}/qtlocation/*
 
-%files -n qt5-plugin-geoservices-here
-%defattr(-,root,root,-)
-%{_libdir}/qt5/plugins/geoservices/*here*
-
 %files -n qt5-plugin-geoservices-osm
 %defattr(-,root,root,-)
 %{_libdir}/qt5/plugins/geoservices/*osm*
