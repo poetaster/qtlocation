@@ -69,7 +69,7 @@ QGeoTiledMapReply *QGeoTileFetcherOsm::getTileImage(const QGeoTileSpec &spec)
             request.setUrl(QUrl(QStringLiteral("https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryOnly/MapServer/tile/") +
                                 QString::number(spec.zoom()) + QLatin1Char('/') +
                                 QString::number(spec.x()) + QLatin1Char('/') +
-                                QString::number(spec.y()) + QStringLiteral(".jpg")));
+                                QString::number(spec.y()) ));
             break;
         default:
             qWarning("Unknown map id %d\n", spec.mapId());
