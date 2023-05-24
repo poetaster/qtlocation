@@ -1,9 +1,9 @@
 /****************************************************************************
 **
-** Copyright (C) 2013 Aaron McCarthy <mccarthy.aaron@gmail.com>
+** Copyright (C) 2015 Aaron McCarthy <mccarthy.aaron@gmail.com>
 ** Contact: http://www.qt.io/licensing/
 **
-** This file is part of the QtLocation module of the Qt Toolkit.
+** This file is part of the QtFoo module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL21$
 ** Commercial License Usage
@@ -31,34 +31,61 @@
 **
 ****************************************************************************/
 
-#ifndef QGEOTILEFETCHEROSM_H
-#define QGEOTILEFETCHEROSM_H
+#ifndef QPLACEMANAGERENGINEOSM_H
+#define QPLACEMANAGERENGINEOSM_H
 
-#include <QtLocation/private/qgeotilefetcher_p.h>
+#include <QtLocation/QPlaceManagerEngine>
+#include <QtLocation/QGeoServiceProvider>
 
 QT_BEGIN_NAMESPACE
 
-class QGeoTiledMappingManagerEngine;
 class QNetworkAccessManager;
+class QNetworkReply;
+class QPlaceCategoriesReplyOsm;
 
-class QGeoTileFetcherOsm : public QGeoTileFetcher
+class QPlaceManagerEngineOsm : public QPlaceManagerEngine
 {
     Q_OBJECT
 
 public:
-    QGeoTileFetcherOsm(QObject *parent = 0);
+    QPlaceManagerEngineOsm(const QVariantMap &parameters, QGeoServiceProvider::Error *error,
+                           QString *errorString);
+    ~QPlaceManagerEngineOsm();
 
-    void setUserAgent(const QByteArray &userAgent);
-    void setUrlPrefix(const QString &urlPrefix);
+    QPlaceSearchReply *search(const QPlaceSearchRequest &request) Q_DECL_OVERRIDE;
+
+    QPlaceReply *initializeCategories() Q_DECL_OVERRIDE;
+    QString parentCategoryId(const QString &categoryId) const Q_DECL_OVERRIDE;
+    QStringList childCategoryIds(const QString &categoryId) const Q_DECL_OVERRIDE;
+    QPlaceCategory category(const QString &categoryId) const Q_DECL_OVERRIDE;
+
+    QList<QPlaceCategory> childCategories(const QString &parentId) const Q_DECL_OVERRIDE;
+
+    QList<QLocale> locales() const Q_DECL_OVERRIDE;
+    void setLocales(const QList<QLocale> &locales) Q_DECL_OVERRIDE;
+
+private slots:
+    void categoryReplyFinished();
+    void categoryReplyError();
+    void replyFinished();
+    void replyError(QPlaceReply::Error errorCode, const QString &errorString);
 
 private:
-    QGeoTiledMapReply *getTileImage(const QGeoTileSpec &spec);
+    void fetchNextCategoryLocale();
 
     QNetworkAccessManager *m_networkManager;
     QByteArray m_userAgent;
     QString m_urlPrefix;
+    QList<QLocale> m_locales;
+
+    QNetworkReply *m_categoriesReply;
+    QList<QPlaceCategoriesReplyOsm *> m_pendingCategoriesReply;
+    QHash<QString, QPlaceCategory> m_categories;
+    QHash<QString, QStringList> m_subcategories;
+
+    QList<QLocale> m_categoryLocales;
 };
 
 QT_END_NAMESPACE
 
-#endif // QGEOTILEFETCHEROSM_H
+#endif // QPLACEMANAGERENGINEOSM_H

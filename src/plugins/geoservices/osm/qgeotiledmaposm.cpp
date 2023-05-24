@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2013 Aaron McCarthy <mccarthy.aaron@gmail.com>
+** Copyright (C) 2015 Aaron McCarthy <mccarthy.aaron@gmail.com>
 ** Contact: http://www.qt.io/licensing/
 **
 ** This file is part of the QtLocation module of the Qt Toolkit.
@@ -31,36 +31,57 @@
 **
 ****************************************************************************/
 
-#include "qgeoserviceproviderpluginosm.h"
+#include "qgeotiledmaposm.h"
 #include "qgeotiledmappingmanagerengineosm.h"
-#include "qgeocodingmanagerengineosm.h"
-#include "qgeoroutingmanagerengineosm.h"
-#include "qplacemanagerengineosm.h"
+
+#include <QtLocation/private/qgeotilespec_p.h>
 
 QT_BEGIN_NAMESPACE
 
-QGeoCodingManagerEngine *QGeoServiceProviderFactoryOsm::createGeocodingManagerEngine(
-    const QVariantMap &parameters, QGeoServiceProvider::Error *error, QString *errorString) const
+QGeoTiledMapOsm::QGeoTiledMapOsm(QGeoTiledMappingManagerEngineOsm *engine, QObject *parent)
+:   QGeoTiledMap(engine, parent), m_mapId(-1), m_customCopyright(engine->customCopyright())
 {
-    return new QGeoCodingManagerEngineOsm(parameters, error, errorString);
 }
 
-QGeoMappingManagerEngine *QGeoServiceProviderFactoryOsm::createMappingManagerEngine(
-    const QVariantMap &parameters, QGeoServiceProvider::Error *error, QString *errorString) const
+QGeoTiledMapOsm::~QGeoTiledMapOsm()
 {
-    return new QGeoTiledMappingManagerEngineOsm(parameters, error, errorString);
 }
 
-QGeoRoutingManagerEngine *QGeoServiceProviderFactoryOsm::createRoutingManagerEngine(
-    const QVariantMap &parameters, QGeoServiceProvider::Error *error, QString *errorString) const
+void QGeoTiledMapOsm::evaluateCopyrights(const QSet<QGeoTileSpec> &visibleTiles)
 {
-    return new QGeoRoutingManagerEngineOsm(parameters, error, errorString);
-}
+    if (visibleTiles.isEmpty())
+        return;
 
-QPlaceManagerEngine *QGeoServiceProviderFactoryOsm::createPlaceManagerEngine(
-    const QVariantMap &parameters, QGeoServiceProvider::Error *error, QString *errorString) const
-{
-    return new QPlaceManagerEngineOsm(parameters, error, errorString);
+    QGeoTileSpec tile = *visibleTiles.constBegin();
+    if (tile.mapId() == m_mapId)
+        return;
+
+    m_mapId = tile.mapId();
+
+    QString copyrights;
+    switch (m_mapId) {
+    case 1:
+    case 2:
+        // set attribution to Map Quest
+        copyrights = tr("Tiles Courtesy of <a href='http://www.mapquest.com/'>MapQuest</a><br/>Data &copy; <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors");
+        break;
+    case 3:
+    case 4:
+    case 5:
+    case 6:
+    case 7:
+        // set attribution to Thunder Forest
+        copyrights = tr("Maps &copy; <a href='http://www.thunderforest.com/'>Thunderforest</a><br/>Data &copy; <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors");
+        break;
+    case 8:
+        copyrights = m_customCopyright;
+        break;
+    default:
+        // set attribution to OSM
+        copyrights = tr("&copy; <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors");
+    }
+
+    emit copyrightsChanged(copyrights);
 }
 
 QT_END_NAMESPACE

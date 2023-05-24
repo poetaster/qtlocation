@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2013 Aaron McCarthy <mccarthy.aaron@gmail.com>
+** Copyright (C) 2015 Aaron McCarthy <mccarthy.aaron@gmail.com>
 ** Contact: http://www.qt.io/licensing/
 **
 ** This file is part of the QtLocation module of the Qt Toolkit.
@@ -31,36 +31,30 @@
 **
 ****************************************************************************/
 
-#include "qgeoserviceproviderpluginosm.h"
-#include "qgeotiledmappingmanagerengineosm.h"
-#include "qgeocodingmanagerengineosm.h"
-#include "qgeoroutingmanagerengineosm.h"
-#include "qplacemanagerengineosm.h"
+#ifndef QGEOTILEDMAPOSM_H
+#define QGEOTILEDMAPOSM_H
+
+#include <QtLocation/private/qgeotiledmap_p.h>
 
 QT_BEGIN_NAMESPACE
 
-QGeoCodingManagerEngine *QGeoServiceProviderFactoryOsm::createGeocodingManagerEngine(
-    const QVariantMap &parameters, QGeoServiceProvider::Error *error, QString *errorString) const
+class QGeoTiledMappingManagerEngineOsm;
+class QGeoTiledMapOsm: public QGeoTiledMap
 {
-    return new QGeoCodingManagerEngineOsm(parameters, error, errorString);
-}
+    Q_OBJECT
 
-QGeoMappingManagerEngine *QGeoServiceProviderFactoryOsm::createMappingManagerEngine(
-    const QVariantMap &parameters, QGeoServiceProvider::Error *error, QString *errorString) const
-{
-    return new QGeoTiledMappingManagerEngineOsm(parameters, error, errorString);
-}
+public:
+    QGeoTiledMapOsm(QGeoTiledMappingManagerEngineOsm *engine, QObject *parent = 0);
+    ~QGeoTiledMapOsm();
 
-QGeoRoutingManagerEngine *QGeoServiceProviderFactoryOsm::createRoutingManagerEngine(
-    const QVariantMap &parameters, QGeoServiceProvider::Error *error, QString *errorString) const
-{
-    return new QGeoRoutingManagerEngineOsm(parameters, error, errorString);
-}
+protected:
+    void evaluateCopyrights(const QSet<QGeoTileSpec> &visibleTiles) Q_DECL_OVERRIDE;
 
-QPlaceManagerEngine *QGeoServiceProviderFactoryOsm::createPlaceManagerEngine(
-    const QVariantMap &parameters, QGeoServiceProvider::Error *error, QString *errorString) const
-{
-    return new QPlaceManagerEngineOsm(parameters, error, errorString);
-}
+private:
+    int m_mapId;
+    const QString m_customCopyright;
+};
 
 QT_END_NAMESPACE
+
+#endif

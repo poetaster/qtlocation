@@ -1,7 +1,7 @@
 /****************************************************************************
 **
 ** Copyright (C) 2013 Aaron McCarthy <mccarthy.aaron@gmail.com>
-** Contact: http://www.qt-project.org/legal
+** Contact: http://www.qt.io/licensing/
 **
 ** This file is part of the QtLocation module of the Qt Toolkit.
 **
@@ -10,9 +10,9 @@
 ** Licensees holding valid commercial Qt licenses may use this file in
 ** accordance with the commercial license agreement provided with the
 ** Software or, alternatively, in accordance with the terms contained in
-** a written agreement between you and Digia. For licensing terms and
-** conditions see http://qt.digia.com/licensing. For further information
-** use the contact form at http://qt.digia.com/contact-us.
+** a written agreement between you and The Qt Company. For licensing terms
+** and conditions see http://www.qt.io/terms-conditions. For further
+** information use the contact form at http://www.qt.io/contact-us.
 **
 ** GNU Lesser General Public License Usage
 ** Alternatively, this file may be used under the terms of the GNU Lesser
@@ -23,8 +23,8 @@
 ** requirements will be met: https://www.gnu.org/licenses/lgpl.html and
 ** http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html.
 **
-** In addition, as a special exception, Digia gives you certain additional
-** rights. These rights are described in the Digia Qt LGPL Exception
+** As a special exception, The Qt Company gives you certain additional
+** rights. These rights are described in The Qt Company LGPL Exception
 ** version 1.1, included in the file LGPL_EXCEPTION.txt in this package.
 **
 ** $QT_END_LICENSE$
@@ -274,7 +274,7 @@ static QGeoRoute constructRoute(const QByteArray &geometry, const QJsonArray &in
     for (int i = instructions.count() - 1; i >= 0; --i) {
         QJsonArray instruction = instructions.at(i).toArray();
 
-        if (instruction.count() != 8) {
+        if (instruction.count() < 8) {
             qWarning("Instruction does not contain enough fields.");
             continue;
         }
@@ -344,10 +344,10 @@ void QGeoRouteReplyOsm::networkReplyFinished()
         int status = object.value(QStringLiteral("status")).toDouble();
         QString statusMessage = object.value(QStringLiteral("status_message")).toString();
 
-        // status code is 0 in case of success
+        // status code 0 or 200 are case of success
         // status code is 207 if no route was found
         // an error occurred when trying to find a route
-        if (0 != status) {
+        if (0 != status && 200 != status) {
             setError(QGeoRouteReply::UnknownError, statusMessage);
             m_reply->deleteLater();
             m_reply = 0;
