@@ -98,15 +98,6 @@ Summary:    Documentation for QtLocation
 %description -n qt5-qtlocation-doc
 %{summary}.
 
-%package -n qt5-plugin-geoservices-here
-Summary:    Qt Geoservices plugin using HERE location services
-Requires:   qt5-qtlocation = %{version}-%{release}
-Provides:   qt5-qtlocation-plugin-geoservices-here
-
-%description -n qt5-plugin-geoservices-here
-This package contains the geoservices plugin using HERE location services
-
-
 %package -n qt5-plugin-geoservices-osm
 Summary:    Qt Geoservices plugin for OpenStreetMaps
 Requires:   qt5-qtlocation = %{version}-%{release}
