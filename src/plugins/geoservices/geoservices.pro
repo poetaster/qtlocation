@@ -1,3 +1,3 @@
 TEMPLATE = subdirs
 
-SUBDIRS = here osm
+SUBDIRS = osm
