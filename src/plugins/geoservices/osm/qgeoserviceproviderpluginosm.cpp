@@ -60,7 +60,13 @@ QGeoRoutingManagerEngine *QGeoServiceProviderFactoryOsm::createRoutingManagerEng
 QPlaceManagerEngine *QGeoServiceProviderFactoryOsm::createPlaceManagerEngine(
     const QVariantMap &parameters, QGeoServiceProvider::Error *error, QString *errorString) const
 {
-    return new QPlaceManagerEngineOsm(parameters, error, errorString);
+
+    Q_UNUSED(parameters)
+    Q_UNUSED(error)
+    Q_UNUSED(errorString)
+
+    return 0;
+    //return new QPlaceManagerEngineOsm(parameters, error, errorString);
 }
 
 QT_END_NAMESPACE
