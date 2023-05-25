@@ -84,9 +84,10 @@ QGeoTiledMappingManagerEngineOsm::QGeoTiledMappingManagerEngineOsm(const QVarian
 
 QGeoTiledMappingManagerEngineOsm::~QGeoTiledMappingManagerEngineOsm()
 {
-}
 
-QGeoMap *QGeoTiledMappingManagerEngineOsm::createMap()
+}
+// revert type
+QGeoMapData *QGeoTiledMappingManagerEngineOsm::createMap()
 {
     return new QGeoTiledMapOsm(this);
 }

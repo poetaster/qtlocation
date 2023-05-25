@@ -49,7 +49,7 @@ public:
                                      QGeoServiceProvider::Error *error, QString *errorString);
     ~QGeoTiledMappingManagerEngineOsm();
 
-    QGeoMap *createMap();
+    QGeoMapData *createMap();
     QString customCopyright() const;
 
 private:
